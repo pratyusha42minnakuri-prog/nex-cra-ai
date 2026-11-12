@@ -1,14 +1,17 @@
 import streamlit as st
+import google.generativeai as genai
 
-st.set_page_config(page_title="NEX CRA AI", page_icon="📚")
 st.title("📚 NEX CRA AI")
-st.write("AI Homework Assistant")
+st.write("AI Homework Assistant - Like ChatGPT!")
 
-question = st.text_input("Ask your homework question:")
+genai.configure(api_key=st.secrets["GEMINI_KEY"])
+model = genai.GenerativeModel("gemini-1.5-flash")
 
+q = st.text_input("Ask your homework question:")
 if st.button("Ask"):
-    if question:
-        st.success("You asked: " + question)
-        st.write("This is a demo answer. Connect your OpenAI key to get real answers!")
+    if q:
+        with st.spinner("Thinking..."):
+            ans = model.generate_content(q)
+            st.success(ans.text)
     else:
         st.warning("Please type a question first!")
